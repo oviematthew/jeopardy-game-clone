@@ -92,11 +92,11 @@ body.appendChild(categoryDiv);
    if (inputValue !== null) {
      // I used .tolowercase so all answers entered are made lowercase to be compared with the correct answers which are also made lowercase
      if (inputValue.toLowerCase() === correctAnswer.toLowerCase()) {
-       message.textContent = "Correct answer!";
+       message.textContent = "Correct answer:  " + correctAnswer ;
        message.style.color = "green";
        increaseScore(valueText);
      } else {
-       message.textContent = "Wrong answer!";
+       message.textContent = "Wrong answer answer is: " + correctAnswer;
        message.style.color = "red";
      }
    }
@@ -142,11 +142,22 @@ body.appendChild(categoryDiv);
      let question = document.createElement("p");
      question.textContent = questions[i].question;
      question.className = "questionItem";
+     question.classList.add("hide")
      valueDiv.appendChild(question);
 
      // Add click event listener to valueDiv
      valueDiv.addEventListener("click", () => {
-       handleAnswer(value.textContent, questions[i].answer);
+
+        
+        question.classList.remove("hide");
+        value.classList.add("hide");
+        
+        function inputAnswer(){
+            handleAnswer(value.textContent, questions[i].answer);
+        }
+
+        setTimeout(inputAnswer, 3000);
+       
      });
    }
  }
