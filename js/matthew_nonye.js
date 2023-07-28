@@ -40,6 +40,11 @@ body.appendChild(buttonDiv);
 buttonDiv.className = "center";
 
 
+// Category Div
+var categoryDiv = document.createElement("div");
+categoryDiv.className = "categoryDiv";
+body.appendChild(categoryDiv);
+
 // Button
 var resetButton = document.createElement("button");
 buttonDiv.appendChild(resetButton);
@@ -49,12 +54,6 @@ resetButton.className = "resetBtn";
 resetButton.addEventListener("click", function(){
     location.reload();
 })
-
-// Category Div
-var categoryDiv = document.createElement("div");
-categoryDiv.className = "categoryDiv";
-body.appendChild(categoryDiv);
-
 
  // Urls
  const categoryURL = "https://jservice.io/api/categories?count=5";
@@ -92,11 +91,11 @@ body.appendChild(categoryDiv);
    if (inputValue !== null) {
      // I used .tolowercase so all answers entered are made lowercase to be compared with the correct answers which are also made lowercase
      if (inputValue.toLowerCase() === correctAnswer.toLowerCase()) {
-       message.textContent = "Correct answer:  " + correctAnswer ;
+       message.textContent = "Great, '" + correctAnswer + "' is the correct answer"  ;
        message.style.color = "green";
        increaseScore(valueText);
      } else {
-       message.textContent = "Wrong answer answer is: " + correctAnswer;
+       message.textContent = "Bummer, " + "'" + inputValue + "' is the wrong answer!"+ "\n" + "The correct answer is: '" + correctAnswer + "'";
        message.style.color = "red";
      }
    }
@@ -146,7 +145,7 @@ body.appendChild(categoryDiv);
      valueDiv.appendChild(question);
 
      // Add click event listener to valueDiv
-     valueDiv.addEventListener("click", () => {
+     value.addEventListener("click", () => {
 
         
         question.classList.remove("hide");
