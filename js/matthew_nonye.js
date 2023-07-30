@@ -1,3 +1,5 @@
+// Variable Creation
+
 var body = document.body;
 body.style.backgroundColor = "#3268a8";
 
@@ -16,7 +18,7 @@ logoImg.src = "/assets/logo.png";
 // Instructions
 var instructionsDiv = document.createElement("p");
 body.appendChild(instructionsDiv);
-instructionsDiv.textContent = "Click on a tile and answer each question";
+instructionsDiv.textContent = "Click on a tile and answer each question that pops up";
 instructionsDiv.style.color = "#fff";
 instructionsDiv.className = "center";
 
@@ -28,37 +30,55 @@ let counter = 0;
 score.textContent = "Score: $" + counter;
 score.className = "center";
 
-// quiz message
+// Game Message Board
 let message = document.createElement("p");
 message.classList.add("center", "message");
 message.style.backgroundColor = "#fff";
 body.appendChild(message);
 
-// Button Div
-var buttonDiv = document.createElement("div");
-body.appendChild(buttonDiv);
-buttonDiv.className = "center";
+// Start Button Div
+var buttonDiv1 = document.createElement("div");
+body.appendChild(buttonDiv1);
+buttonDiv1 .className = "center";
 
+// Start Button
+var startButton = document.createElement("button");
+buttonDiv1.appendChild(startButton);
+startButton.textContent = "Start Game";
+startButton.className = "startBtn";
 
 // Category Div
 var categoryDiv = document.createElement("div");
 categoryDiv.className = "categoryDiv";
 body.appendChild(categoryDiv);
 
-// Button
+// Button Div
+var buttonDiv2 = document.createElement("div");
+body.appendChild(buttonDiv2);
+buttonDiv2.className = "center";
+
+// Reset Button
 var resetButton = document.createElement("button");
-buttonDiv.appendChild(resetButton);
-resetButton.textContent = "Reset Board";
+buttonDiv2.appendChild(resetButton);
+resetButton.textContent = "Reset Game";
 resetButton.className = "resetBtn";
+resetButton.style.display = "none"; //Hide the reset button until game has started
 
-resetButton.addEventListener("click", function(){
-    location.reload();
-})
+// End Button
+var endButton= document.createElement("button");
+buttonDiv2.appendChild(endButton);
+endButton.textContent = "End Game";
+endButton.className = "endBtn";
+endButton.style.display = "none"; //Hide the end button until game has started
 
- // Urls
- const categoryURL = "https://jservice.io/api/categories?count=5";
 
- // Constant request method to be used for the api
+// End Variable Creation
+// ------------------------------------------------------------------------------------------
+
+
+// Constants
+
+ // Constant http request method to be used for the api
  function using_Http(URL, Res) {
    var request = new XMLHttpRequest();
 
@@ -71,25 +91,135 @@ resetButton.addEventListener("click", function(){
    request.send();
  }
 
+//  Constants End
+
+ // ------------------------------------------------------------------------------------------
+
+// Button Functionalities
+
+ // Start Game onclick of "Start Game" button
+startButton.addEventListener("click", function() {
+  fetchBoard();
+  startButton.style.display = "none"; // Hide the "Start Game" button after fetching the board
+  resetButton.style.display = "block"; // Display the "Reset Game" button after game has started
+  endButton.style.display = "block"; // Display the "Reset Game" button after game has started
+});
+
+// Reload Page on click of end button
+endButton.addEventListener("click", function(){
+  location.reload();
+})
+
+// Refetch the APi on click of the refresh button to get new random categories
+resetButton.addEventListener("click", function(){
+  
+    resetBoard();
+
+})
+
+function resetBoard() {
+  // Remove all categories from the DOM
+  categoryDiv.innerHTML = "";
+
+  // Reset the score counter
+  counter = 0;
+  score.textContent = "Score: $" + counter;
+
+  // Reset the message board
+  message.textContent = ""
+
+  // Fetch a new board
+  fetchBoard();
+}
+
+// End button functionalities
+
+
+// ------------------------------------------------------------------------------------------
+
+// Api Functionalities
+
+// Function to fetch random categories and display questions
+function fetchBoard() {
+  getRandomCategories(5, (randomCategories) => {
+    for (let i = 0; i < randomCategories.length; i++) {
+      getCategoryQuestions(randomCategories[i].category.id, (questions) => {
+        showCategoryQuestions(randomCategories[i].category, questions);
+      });
+    }
+  });
+}
+
+
  // Function to fetch questions for a specific category
  function getCategoryQuestions(categoryID, callback) {
    const questionsURL = `https://jservice.io/api/clues?category=${categoryID}`;
    using_Http(questionsURL, callback);
  }
 
- // Function to increase the score when an answer is correct
- function increaseScore(valueText) {
-   let valueNumber = parseInt(valueText.replace("$", ""));
-   counter += valueNumber;
-   score.textContent = "Score: $" + counter;
- }
+ // Function to fetch random categories
+ function getRandomCategories(count, callback) {
+  const randomCategoryURL = `https://jservice.io/api/random?count=${count}`;
+  using_Http(randomCategoryURL, callback);
+}
 
- // Function to handle answer input and display message
+
+ // Display questions for a category
+ function showCategoryQuestions(category, questions) {
+  let categoryContainer = document.createElement("div");
+  categoryContainer.className = "categoryContainer";
+  categoryDiv.appendChild(categoryContainer);
+
+  let categoryh2 = document.createElement("h2");
+  categoryh2.id = category.id;
+  categoryh2.textContent = category.title.toUpperCase();
+  categoryh2.className = "categoryItem";
+  categoryContainer.appendChild(categoryh2);
+
+  for (let i = 0; i < Math.min(questions.length, 5); i++) {
+    let valueDiv = document.createElement("div");
+    valueDiv.className = "valueDiv";
+    categoryContainer.appendChild(valueDiv);
+
+    let price = document.createElement("p");
+    price.textContent = "$" + questions[i].value;
+    price.className = "priceItem";
+    valueDiv.appendChild(price);
+
+    let question = document.createElement("p");
+    question.textContent = questions[i].question;
+    question.className = "questionItem";
+    question.classList.add("hide")
+    valueDiv.appendChild(question);
+
+    // Onclick of tile, hide price and display answer 
+    price.addEventListener("click", () => {
+
+       question.classList.remove("hide");
+       price.classList.add("hide");
+
+       function inputAnswer(){
+           handleAnswer(price.textContent, questions[i].answer);
+       }
+
+       setTimeout(inputAnswer, 3000);
+      
+     
+    });
+  }
+}
+// End Api functionalities
+
+// ------------------------------------------------------------------------------------------
+
+// Game Functions
+
+ // Function to handle answer input and display message afterwards
  function handleAnswer(valueText, correctAnswer) {
    let inputValue = prompt("Enter your answer: ");
 
+   // I used .tolowercase so all answers inputed are forced to be lowercase to be compared with the correct answers which are also forced to be lowercase so the comaprison will not be case sensitive.
    if (inputValue !== null) {
-     // I used .tolowercase so all answers entered are made lowercase to be compared with the correct answers which are also made lowercase
      if (inputValue.toLowerCase() === correctAnswer.toLowerCase()) {
        message.textContent = "Great, '" + correctAnswer + "' is the correct answer"  ;
        message.style.color = "green";
@@ -101,64 +231,20 @@ resetButton.addEventListener("click", function(){
    }
  }
 
- // Function to fetch random categories
- function getRandomCategories(count, callback) {
-   const randomCategoryURL = `https://jservice.io/api/random?count=${count}`;
-   using_Http(randomCategoryURL, callback);
- }
+ // Function to increase the score when an answer is correct
+ function increaseScore(valueText) {
+  let valueNumber = parseInt(valueText.replace("$", ""));
+  counter += valueNumber;
+  score.textContent = "Score: $" + counter;
+}
 
- // Fetch random categories and display questions
- getRandomCategories(5, (randomCategories) => {
-   for (let i = 0; i < randomCategories.length; i++) {
-     getCategoryQuestions(randomCategories[i].category.id, (questions) => {
-       showCategoryQuestions(randomCategories[i].category, questions);
-     });
-   }
- });
 
- // Display questions for a category
- function showCategoryQuestions(category, questions) {
-   let categoryContainer = document.createElement("div");
-   categoryContainer.className = "categoryContainer";
-   categoryDiv.appendChild(categoryContainer);
 
-   let categoryh2 = document.createElement("h2");
-   categoryh2.id = category.id;
-   categoryh2.textContent = category.title.toUpperCase();
-   categoryh2.className = "categoryItem";
-   categoryContainer.appendChild(categoryh2);
+// End Game functions
 
-   for (let i = 0; i < Math.min(questions.length, 5); i++) {
-     let valueDiv = document.createElement("div");
-     valueDiv.className = "valueDiv";
-     categoryContainer.appendChild(valueDiv);
+// ------------------------------------------------------------------------------------------
 
-     let value = document.createElement("p");
-     value.textContent = "$" + questions[i].value;
-     value.className = "priceItem";
-     valueDiv.appendChild(value);
 
-     let question = document.createElement("p");
-     question.textContent = questions[i].question;
-     question.className = "questionItem";
-     question.classList.add("hide")
-     valueDiv.appendChild(question);
 
-     // Add click event listener to valueDiv
-     value.addEventListener("click", () => {
 
-        
-        question.classList.remove("hide");
-        value.classList.add("hide");
-        
-        function inputAnswer(){
-            handleAnswer(value.textContent, questions[i].answer);
-        }
-
-        setTimeout(inputAnswer, 3000);
-       
-     });
-   }
- }
    
-

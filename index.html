@@ -20,12 +20,63 @@
             border-radius: 10px;
         }
 
-        .resetBtn {
+        .startBtn {
             margin-top: 30px;
             font-size: 15px;
             width: 120px;
             height: 45px;
+            background-color: green;
+            color: #fff;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all .4s ease-in-out;
+        }
+
+        .startBtn:hover {
+            color: #000;
             background-color: #fff;
+
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: scroll;
+        }
+
+        .endBtn {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            font-size: 15px;
+            width: 120px;
+            height: 45px;
+            background-color: red;
+            color: #fff;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all .4s ease-in-out;
+        }
+
+       
+        .endBtn:hover {
+            color: #000;
+            background-color: #fff;
+
+        }
+
+        .resetBtn {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            margin-right: 20px;
+            font-size: 15px;
+            width: 120px;
+            height: 45px;
+            background-color: blue;
+            color: #fff;
             border-radius: 10px;
             border: none;
             cursor: pointer;
@@ -33,8 +84,8 @@
         }
 
         .resetBtn:hover {
-            color: #fff;
-            background-color: #000;
+            color: #000;
+            background-color: #fff;
 
         }
 
@@ -52,6 +103,7 @@
             align-items: center;
             width: 200px;
             padding: 10px;
+            padding-bottom: 0;
             border: 1px solid #fff;
         }
         .categoryItem {
@@ -60,6 +112,7 @@
             height: 50px;
             color: #fff;
             margin-bottom: 10px;
+            text-align: center;
         }
 
         .valueDiv {
@@ -72,9 +125,7 @@
             cursor: pointer;
         }
 
-        .valueDiv:last-child {
-            border-bottom: none;
-        }
+        
 
         .priceItem {
             color: gold;
