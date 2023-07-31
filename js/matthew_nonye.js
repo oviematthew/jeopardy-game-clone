@@ -166,48 +166,55 @@ function fetchBoard() {
 
  // Display questions for a category
  function showCategoryQuestions(category, questions) {
+  // Filter out questions with null values
+  const filteredQuestions = questions.filter((question) => question.value !== null);
+
+  // Proceed to create elements for the remaining questions
   let categoryContainer = document.createElement("div");
   categoryContainer.className = "categoryContainer";
   categoryDiv.appendChild(categoryContainer);
 
+  // Category Titles
   let categoryh2 = document.createElement("h2");
   categoryh2.id = category.id;
   categoryh2.textContent = category.title.toUpperCase();
   categoryh2.className = "categoryItem";
   categoryContainer.appendChild(categoryh2);
 
-  for (let i = 0; i < Math.min(questions.length, 5); i++) {
+  // Create Tiles of Questions with 5 questions per category
+  for (let i = 0; i < Math.min(filteredQuestions.length, 5); i++) {
     let valueDiv = document.createElement("div");
     valueDiv.className = "valueDiv";
     categoryContainer.appendChild(valueDiv);
 
+    // Price value to be shown first
     let price = document.createElement("p");
-    price.textContent = "$" + questions[i].value;
+    price.textContent = "$" + filteredQuestions[i].value;
     price.className = "priceItem";
     valueDiv.appendChild(price);
 
+    // Questions to be hidden until price is clicked on
     let question = document.createElement("p");
-    question.textContent = questions[i].question;
+    question.textContent = filteredQuestions[i].question;
     question.className = "questionItem";
-    question.classList.add("hide")
+    question.classList.add("hide");
     valueDiv.appendChild(question);
 
-    // Onclick of tile, hide price and display answer 
+    // Onclick of price, hide price and display question for 3 seconds before you get to answer
     price.addEventListener("click", () => {
+      question.classList.remove("hide");
+      price.classList.add("hide");
 
-       question.classList.remove("hide");
-       price.classList.add("hide");
+      // Valodate the input given
+      function inputAnswer() {
+        handleAnswer(price.textContent, filteredQuestions[i].answer);
+      }
 
-       function inputAnswer(){
-           handleAnswer(price.textContent, questions[i].answer);
-       }
-
-       setTimeout(inputAnswer, 3000);
-      
-     
+      setTimeout(inputAnswer, 3000);
     });
   }
 }
+
 // End Api functionalities
 
 // ------------------------------------------------------------------------------------------
@@ -225,7 +232,7 @@ function fetchBoard() {
        message.style.color = "green";
        increaseScore(valueText);
      } else {
-       message.textContent = "Bummer, " + "'" + inputValue + "' is the wrong answer!"+ "\n" + "The correct answer is: '" + correctAnswer + "'";
+       message.textContent = "Oh No!, " + "'" + inputValue + "' is the wrong answer!"+ "\n" + "The correct answer is: '" + correctAnswer + "'";
        message.style.color = "red";
      }
    }
