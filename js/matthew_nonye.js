@@ -166,6 +166,7 @@ function fetchBoard() {
 
  // Display questions for a category
  function showCategoryQuestions(category, questions) {
+  
   // Filter out questions with null values
   const filteredQuestions = questions.filter((question) => question.value !== null);
 
@@ -181,7 +182,7 @@ function fetchBoard() {
   categoryh2.className = "categoryItem";
   categoryContainer.appendChild(categoryh2);
 
-  // Create Tiles of Questions with 5 questions per category
+  // Create Tiles of Questions with 5 questions per category using math.min picking the smaller which is 5
   for (let i = 0; i < Math.min(filteredQuestions.length, 5); i++) {
     let valueDiv = document.createElement("div");
     valueDiv.className = "valueDiv";
