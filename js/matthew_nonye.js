@@ -30,13 +30,13 @@ let counter = 0;
 score.textContent = "Score: $" + counter;
 score.className = "center";
 
-// Game Message Board
+// Game Message Board (To display status of answer input)
 let message = document.createElement("p");
 message.classList.add("center", "message");
 message.style.backgroundColor = "#fff";
 body.appendChild(message);
 
-// Start Button Div
+// Button Div1
 var buttonDiv1 = document.createElement("div");
 body.appendChild(buttonDiv1);
 buttonDiv1 .className = "center";
@@ -52,19 +52,19 @@ var categoryDiv = document.createElement("div");
 categoryDiv.className = "categoryDiv";
 body.appendChild(categoryDiv);
 
-// Button Div
+// Button Div2
 var buttonDiv2 = document.createElement("div");
 body.appendChild(buttonDiv2);
 buttonDiv2.className = "center";
 
-// Reset Button
+// Reset Game Button
 var resetButton = document.createElement("button");
 buttonDiv2.appendChild(resetButton);
 resetButton.textContent = "Reset Game";
 resetButton.className = "resetBtn";
 resetButton.style.display = "none"; //Hide the reset button until game has started
 
-// End Button
+// End Game Button
 var endButton= document.createElement("button");
 buttonDiv2.appendChild(endButton);
 endButton.textContent = "End Game";
@@ -206,11 +206,12 @@ function fetchBoard() {
       question.classList.remove("hide");
       price.classList.add("hide");
 
-      // Valodate the input given
+      // Validate the input given
       function inputAnswer() {
         handleAnswer(price.textContent, filteredQuestions[i].answer);
       }
 
+      // Delay answer input by 3 seconds
       setTimeout(inputAnswer, 3000);
     });
   }
