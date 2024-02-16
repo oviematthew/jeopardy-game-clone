@@ -78,7 +78,7 @@ endButton.style.display = "none"; //Hide the end button until game has started
 
 // Constants
 
- // Constant http request method to be used for the api
+ // XML http request method to be used for the api
  function using_Http(URL, Res) {
    var request = new XMLHttpRequest();
 
@@ -91,7 +91,7 @@ endButton.style.display = "none"; //Hide the end button until game has started
    request.send();
  }
 
-//  Constants End
+//  End
 
  // ------------------------------------------------------------------------------------------
 
